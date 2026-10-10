@@ -1,0 +1,208 @@
+#!/usr/bin/env python3
+"""
+NLC netns helper — the ONLY root-privileged network plumbing for container nodes.
+
+Runs as root via a narrow NOPASSWD sudoers rule (see deploy/nlc-netns-helper.sudoers).
+It does nothing but veth plumbing, and it only ever touches interfaces named
+`podveth<N>` (N = the bridging ioulive86 node's instance id). Even if the calling
+(unprivileged) backend is buggy or compromised, the blast radius is limited to
+creating/deleting/configuring podveth-prefixed veths — never eth0 or any real NIC.
+
+Subcommands:
+  create --pid P --root-veth podvethN --cont-veth ethM
+         [--addr A.B.C.D --prefix N] [--gateway A.B.C.D]
+      Create a veth pair (podvethN in the root netns, its peer injected into the
+      container whose main process is PID P and renamed ethM), configure and bring up.
+  delete --root-veth podvethN
+      Delete podvethN (its peer auto-destroys). Idempotent.
+
+Security note: this file must be installed root-owned and NOT writable by the
+backend user, otherwise sudo-executing it is a privilege-escalation vector.
+"""
+import argparse
+import ipaddress
+import os
+import re
+import subprocess
+import sys
+
+ROOT_VETH_RE = re.compile(r"^podveth[0-9]{1,4}$")   # podveth + instance id (1..1023)
+CONT_VETH_RE = re.compile(r"^eth[0-9]{1,2}$")
+
+DRY = os.environ.get("NLC_HELPER_DRYRUN") == "1"
+
+
+def die(msg: str, code: int = 1):
+    sys.stderr.write(f"nlc-netns-helper: {msg}\n")
+    sys.exit(code)
+
+
+def run(cmd, ignore_fail=False):
+    if DRY:
+        print("+ " + " ".join(cmd))
+        return 0
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    if r.returncode != 0 and not ignore_fail:
+        die(f"command failed ({r.returncode}): {' '.join(cmd)}\n  {r.stderr.strip()}")
+    return r.returncode
+
+
+def valid_root_veth(name: str) -> str:
+    if not ROOT_VETH_RE.match(name):
+        die(f"invalid --root-veth {name!r} (must match podveth<1..4 digits>)")
+    return name
+
+
+def valid_cont_veth(name: str) -> str:
+    if not CONT_VETH_RE.match(name):
+        die(f"invalid --cont-veth {name!r} (must match eth<1..2 digits>)")
+    return name
+
+
+def valid_pid(pid: str) -> int:
+    if not re.fullmatch(r"[0-9]{1,7}", pid):
+        die(f"invalid --pid {pid!r}")
+    p = int(pid)
+    if p <= 1 or not os.path.exists(f"/proc/{p}/ns/net"):
+        die(f"pid {p} has no network namespace (not a running container?)")
+    return p
+
+
+def valid_ip(addr: str, what: str) -> str:
+    try:
+        ipaddress.IPv4Address(addr)
+    except ValueError:
+        die(f"invalid {what} {addr!r}")
+    return addr
+
+
+def valid_prefix(pfx: str) -> int:
+    if not re.fullmatch(r"[0-9]{1,2}", pfx) or not (0 <= int(pfx) <= 32):
+        die(f"invalid --prefix {pfx!r}")
+    return int(pfx)
+
+
+def cmd_create(a):
+    root = valid_root_veth(a.root_veth)
+    cont = valid_cont_veth(a.cont_veth)
+    pid = valid_pid(a.pid)
+    peer = root + "b"                      # transient root-side name of the peer, <=15 chars
+    if len(peer) > 15:
+        die("interface name too long")
+    addr = valid_ip(a.addr, "--addr") if a.addr else None
+    prefix = valid_prefix(a.prefix) if a.prefix else None
+    gw = valid_ip(a.gateway, "--gateway") if a.gateway else None
+    if addr and prefix is None:
+        die("--addr requires --prefix")
+
+    nse = ["nsenter", "-t", str(pid), "-n"]
+    try:
+        run(["ip", "link", "add", root, "type", "veth", "peer", "name", peer])
+        run(["ip", "link", "set", peer, "netns", str(pid)])
+        run(nse + ["ip", "link", "set", peer, "name", cont])
+        run(nse + ["ip", "link", "set", cont, "up"])
+        if addr:
+            run(nse + ["ip", "addr", "add", f"{addr}/{prefix}", "dev", cont])
+        if gw:
+            run(nse + ["ip", "route", "add", "default", "via", gw])
+        run(["ip", "link", "set", root, "up"])
+    except SystemExit:
+        run(["ip", "link", "del", root], ignore_fail=True)   # best-effort rollback
+        raise
+    if not DRY:
+        print(root)
+
+
+def cmd_delete(a):
+    root = valid_root_veth(a.root_veth)
+    # peer auto-destroys with the container netns; deleting the root end is enough and idempotent
+    run(["ip", "link", "del", root], ignore_fail=True)
+
+
+def cmd_pair(a):
+    """Create a veth pair connecting two container netns directly (container<->container).
+    Neither end stays in the root namespace. Idempotent for restarts: any existing
+    same-named interface in each netns is removed first."""
+    apid = valid_pid(a.a_pid)
+    bpid = valid_pid(a.b_pid)
+    acv = valid_cont_veth(a.a_cont_veth)
+    bcv = valid_cont_veth(a.b_cont_veth)
+    aaddr = valid_ip(a.a_addr, "--a-addr") if a.a_addr else None
+    aprefix = valid_prefix(a.a_prefix) if a.a_prefix else None
+    agw = valid_ip(a.a_gateway, "--a-gateway") if a.a_gateway else None
+    baddr = valid_ip(a.b_addr, "--b-addr") if a.b_addr else None
+    bprefix = valid_prefix(a.b_prefix) if a.b_prefix else None
+    bgw = valid_ip(a.b_gateway, "--b-gateway") if a.b_gateway else None
+    if aaddr and aprefix is None:
+        die("--a-addr requires --a-prefix")
+    if baddr and bprefix is None:
+        die("--b-addr requires --b-prefix")
+
+    import os
+    base = os.urandom(2).hex()
+    ta = "podveth" + base + "a"
+    tb = "podveth" + base + "b"
+    nse_a = ["nsenter", "-t", str(apid), "-n"]
+    nse_b = ["nsenter", "-t", str(bpid), "-n"]
+
+    run(nse_a + ["ip", "link", "del", acv], ignore_fail=True)
+    run(nse_b + ["ip", "link", "del", bcv], ignore_fail=True)
+    try:
+        run(["ip", "link", "add", ta, "type", "veth", "peer", "name", tb])
+        run(["ip", "link", "set", ta, "netns", str(apid)])
+        run(["ip", "link", "set", tb, "netns", str(bpid)])
+        run(nse_a + ["ip", "link", "set", ta, "name", acv])
+        run(nse_a + ["ip", "link", "set", acv, "up"])
+        run(nse_b + ["ip", "link", "set", tb, "name", bcv])
+        run(nse_b + ["ip", "link", "set", bcv, "up"])
+        if aaddr:
+            run(nse_a + ["ip", "addr", "add", f"{aaddr}/{aprefix}", "dev", acv])
+        if agw:
+            run(nse_a + ["ip", "route", "add", "default", "via", agw])
+        if baddr:
+            run(nse_b + ["ip", "addr", "add", f"{baddr}/{bprefix}", "dev", bcv])
+        if bgw:
+            run(nse_b + ["ip", "route", "add", "default", "via", bgw])
+    except SystemExit:
+        run(nse_a + ["ip", "link", "del", acv], ignore_fail=True)
+        run(nse_b + ["ip", "link", "del", bcv], ignore_fail=True)
+        run(["ip", "link", "del", ta], ignore_fail=True)
+        raise
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="nlc-netns-helper", add_help=True)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    c = sub.add_parser("create")
+    c.add_argument("--pid", required=True)
+    c.add_argument("--root-veth", required=True)
+    c.add_argument("--cont-veth", required=True)
+    c.add_argument("--addr")
+    c.add_argument("--prefix")
+    c.add_argument("--gateway")
+    c.set_defaults(func=cmd_create)
+
+    d = sub.add_parser("delete")
+    d.add_argument("--root-veth", required=True)
+    d.set_defaults(func=cmd_delete)
+
+    pr = sub.add_parser("pair")
+    pr.add_argument("--a-pid", required=True)
+    pr.add_argument("--a-cont-veth", required=True)
+    pr.add_argument("--a-addr")
+    pr.add_argument("--a-prefix")
+    pr.add_argument("--a-gateway")
+    pr.add_argument("--b-pid", required=True)
+    pr.add_argument("--b-cont-veth", required=True)
+    pr.add_argument("--b-addr")
+    pr.add_argument("--b-prefix")
+    pr.add_argument("--b-gateway")
+    pr.set_defaults(func=cmd_pair)
+
+    args = ap.parse_args()
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()

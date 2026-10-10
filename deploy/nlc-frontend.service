@@ -1,0 +1,24 @@
+[Unit]
+Description=NLC Frontend (Next.js)
+After=network.target nlc-backend.service
+
+[Service]
+Type=simple
+User=nlc
+Group=nlc
+
+WorkingDirectory=/opt/nlc/frontend
+ExecStart=/usr/bin/npm start
+Restart=on-failure
+RestartSec=5
+
+Environment=NODE_ENV=production
+# Next.js listens on 3000 by default; override here if needed:
+# Environment=PORT=3000
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nlc-frontend
+
+[Install]
+WantedBy=multi-user.target

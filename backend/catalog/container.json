@@ -1,0 +1,105 @@
+[
+  {
+    "id": "ceos",
+    "label": "Arista cEOS",
+    "match": ["*ceos*"],
+    "command": [
+      "/sbin/init",
+      "systemd.setenv=CEOS=1",
+      "systemd.setenv=EOS_PLATFORM=ceoslab",
+      "systemd.setenv=container=docker",
+      "systemd.setenv=ETBA=1",
+      "systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1",
+      "systemd.setenv=INTFTYPE=eth",
+      "systemd.setenv=MAPETH0=1",
+      "systemd.setenv=MGMT_INTF=eth0"
+    ],
+    "runArgs": [
+      "--privileged",
+      "-e",
+      "CEOS=1",
+      "-e",
+      "EOS_PLATFORM=ceoslab",
+      "-e",
+      "container=docker",
+      "-e",
+      "ETBA=1",
+      "-e",
+      "SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1",
+      "-e",
+      "INTFTYPE=eth",
+      "-e",
+      "MAPETH0=1",
+      "-e",
+      "MGMT_INTF=eth0"
+    ],
+    "shell": "Cli -p 15",
+    "notes": "eth0 is Management0."
+  },
+  {
+    "id": "frr",
+    "label": "FRRouting",
+    "match": ["frrouting/frr", "frr"],
+    "command": [
+      "/usr/lib/frr/watchfrr",
+      "zebra",
+      "staticd",
+      "bgpd",
+      "ospfd",
+      "ospf6d",
+      "isisd",
+      "ripd",
+      "bfdd"
+    ],
+    "runArgs": ["--privileged", "-v", "{{volume:config}}:/etc/frr"],
+    "shell": "vtysh",
+    "notes": "/etc/frr is kept in a per-node volume, so write memory survives a restart."
+  },
+  {
+    "id": "crpd",
+    "label": "Juniper cRPD",
+    "match": ["*crpd*"],
+    "runArgs": [
+      "--privileged",
+      "-v",
+      "{{volume:config}}:/config",
+      "-v",
+      "{{volume:varlog}}:/var/log"
+    ],
+    "shell": "cli",
+    "notes": "/config and /var/log are kept in per-node volumes, so committed configuration survives a restart."
+  },
+  {
+    "id": "xrd",
+    "label": "Cisco XRd Control Plane",
+    "match": ["*xrd-control-plane*"],
+    "command": [
+      "-c",
+      "mkdir -p /etc/xrd && printf 'hostname %s\\nusername admin\\n group root-lr\\n group cisco-support\\n secret 0 admin\\n!\\n' \"$(hostname)\" > /etc/xrd/first-boot.cfg && exec /usr/local/sbin/init"
+    ],
+    "runArgs": [
+      "--privileged",
+      "-t",
+      "--pids-limit",
+      "-1",
+      "--entrypoint",
+      "/bin/sh",
+      "-e",
+      "XR_FIRST_BOOT_CONFIG=/etc/xrd/first-boot.cfg",
+      "-e",
+      "XR_MGMT_INTERFACES=linux:eth0",
+      "-e",
+      "XR_INTERFACES=linux:eth1;linux:eth2;linux:eth3;linux:eth4;linux:eth5;linux:eth6;linux:eth7;linux:eth8;linux:eth9;linux:eth10;linux:eth11;linux:eth12;linux:eth13;linux:eth14;linux:eth15",
+      "-v",
+      "{{volume:storage}}:/xr-storage"
+    ],
+    "shell": "/pkg/bin/xr_cli.sh",
+    "notes": "Log in as admin / admin. eth0 is MgmtEth0/RP0/CPU0/0, eth1-eth15 are GigabitEthernet0/0/0/0-14. /xr-storage is kept in a per-node volume, so committed configuration survives a restart. Boot takes about 3 minutes and about 2 GB of RAM per node; XR runs over 2000 threads, hence --pids-limit -1. -t gives XR's own console (con0, fixed to /dev/pts/0) the container tty, so it does not share the NLC console."
+  },
+  {
+    "id": "default",
+    "label": "Default",
+    "command": ["sleep", "infinity"],
+    "shell": "/bin/sh"
+  }
+]

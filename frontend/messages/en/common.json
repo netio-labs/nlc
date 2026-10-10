@@ -1,0 +1,16 @@
+{
+  "cancel": "Cancel",
+  "updated": {
+    "unavailable": "Updated time unavailable",
+    "justNow": "Updated just now",
+    "relative": "Updated {time}"
+  },
+  "pagination": {
+    "label": "pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "goToPrevious": "Go to previous page",
+    "goToNext": "Go to next page",
+    "morePages": "More pages"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "missingParams": "缺少 labId 或 captureId",
+  "title": "抓包 #{id}",
+  "state": {
+    "connecting": "连接中",
+    "connected": "已连接",
+    "disconnected": "已断开"
+  },
+  "packets": "{count} 个数据包",
+  "filterPlaceholder": "显示过滤器（例如 tcp, ip.addr==1.2.3.4）",
+  "apply": "应用",
+  "clear": "清除",
+  "autoScroll": "自动滚动",
+  "cols": {
+    "no": "序号",
+    "time": "时间",
+    "source": "源地址",
+    "destination": "目的地址",
+    "protocol": "协议",
+    "length": "长度",
+    "info": "信息"
+  },
+  "waiting": "等待数据包…",
+  "connecting": "连接中…",
+  "disconnected": "已断开",
+  "loading": "加载中…"
+}

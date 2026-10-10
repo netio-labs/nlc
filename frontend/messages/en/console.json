@@ -1,0 +1,21 @@
+{
+  "page": {
+    "noLab": "No lab specified. Open console from the topology viewer.",
+    "notFound": "Lab not found."
+  },
+  "resetReconnect": "Reset & reconnect",
+  "clickTab": "Click a tab to open a console.",
+  "terminal": {
+    "resetting": "Resetting console…",
+    "connected": "Connected.",
+    "disconnected": "Disconnected{reason}.",
+    "wsError": "WebSocket error.",
+    "copyFailed": "Copy failed.",
+    "pasteFailed": "Paste failed. Grant clipboard permission and try again.",
+    "copy": "Copy",
+    "paste": "Paste",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "resetFontSize": "Reset Font Size"
+  }
+}

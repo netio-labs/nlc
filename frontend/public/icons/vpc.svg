@@ -1,0 +1,9 @@
+<svg width="440" height="440" viewBox="0 0 440 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="220" cy="220" r="210" fill="#38AA3A" stroke="#C2C0C0" stroke-width="20"/>
+  <!-- PC: monitor, stand, base; glyph centred on (220, 220) -->
+  <g stroke="white" stroke-width="20" stroke-linecap="round" fill="none">
+    <rect x="128" y="142" width="184" height="124" rx="14"/>
+    <line x1="220" y1="266" x2="220" y2="292"/>
+    <line x1="176" y1="296" x2="264" y2="296"/>
+  </g>
+</svg>

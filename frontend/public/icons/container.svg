@@ -1,0 +1,9 @@
+<svg width="440" height="440" viewBox="0 0 440 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="220" cy="220" r="210" fill="#38AA3A" stroke="#C2C0C0" stroke-width="20"/>
+  <!-- Isometric cube, edge 100 (half-width 86.6, half-height 50), centred on (220, 220) -->
+  <g stroke="white" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M220 120 L133.4 170 L220 220 L306.6 170 Z"/>
+    <path d="M133.4 170 L133.4 270 L220 320 L220 220"/>
+    <path d="M306.6 170 L306.6 270 L220 320"/>
+  </g>
+</svg>

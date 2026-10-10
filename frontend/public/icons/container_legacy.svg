@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1254" height="1254" viewBox="0 0 1254 1254">
+  <defs>
+    <radialGradient id="greenBg" cx="50%" cy="42%" r="68%">
+      <stop offset="0%" stop-color="#37c944"/>
+      <stop offset="72%" stop-color="#29bd3a"/>
+      <stop offset="100%" stop-color="#24b334"/>
+    </radialGradient>
+
+    <linearGradient id="silverRing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#efefef"/>
+      <stop offset="45%" stop-color="#cfcfd2"/>
+      <stop offset="100%" stop-color="#efefef"/>
+    </linearGradient>
+
+    <radialGradient id="bodyFill" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#f7f7f8"/>
+      <stop offset="65%" stop-color="#e5e6e8"/>
+      <stop offset="100%" stop-color="#d4d5d8"/>
+    </radialGradient>
+
+    <linearGradient id="purpleEye" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#962db2"/>
+      <stop offset="100%" stop-color="#8a289f"/>
+    </linearGradient>
+
+    <linearGradient id="muzzleRing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#707070"/>
+      <stop offset="100%" stop-color="#4f4f4f"/>
+    </linearGradient>
+
+    <radialGradient id="belly" cx="50%" cy="0%" r="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#eeeeef"/>
+    </radialGradient>
+
+
+    <clipPath id="bodyClip">
+      <path d="
+        M 263 872
+        C 286 824, 279 746, 282 637
+        C 287 432, 438 281, 627 281
+        C 816 281, 967 432, 972 637
+        C 975 746, 968 824, 991 872
+        C 924 930, 792 975, 627 978
+        C 462 975, 330 930, 263 872
+        Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- transparent outside the badge -->
+  <circle cx="627" cy="627" r="627" fill="#C2C0C0"/>
+  <circle cx="627" cy="627" r="570" fill="#38AA3A"/>
+
+  <!-- Seal body fill -->
+  <path d="
+    M 263 872
+    C 286 824, 279 746, 282 637
+    C 287 432, 438 281, 627 281
+    C 816 281, 967 432, 972 637
+    C 975 746, 968 824, 991 872
+    C 924 930, 792 975, 627 978
+    C 462 975, 330 930, 263 872
+    Z"
+    fill="url(#bodyFill)"/>
+
+  <!-- belly highlight clipped into the body -->
+  <ellipse cx="627" cy="1006" rx="220" ry="172"
+           fill="url(#belly)" clip-path="url(#bodyClip)"/>
+
+  <!-- redraw body outline above belly so the white area never covers the black frame -->
+  <path d="
+    M 263 872
+    C 286 824, 279 746, 282 637
+    C 287 432, 438 281, 627 281
+    C 816 281, 967 432, 972 637
+    C 975 746, 968 824, 991 872
+    C 924 930, 792 975, 627 978
+    C 462 975, 330 930, 263 872
+    Z"
+    fill="none"
+    stroke="#060606"
+    stroke-width="25"
+    stroke-linejoin="round"
+    stroke-linecap="round"/>
+
+  <!-- eyebrows -->
+  <path d="M 398 488 Q 442 438 488 477"
+        fill="none" stroke="#070707" stroke-width="21"
+        stroke-linecap="round"/>
+  <path d="M 765 481 Q 809 440 850 488"
+        fill="none" stroke="#070707" stroke-width="21"
+        stroke-linecap="round"/>
+
+  <!-- left eye -->
+  <circle cx="443" cy="592" r="70" fill="url(#purpleEye)"/>
+  <ellipse cx="445" cy="603" rx="45" ry="47" fill="#000000"/>
+  <circle cx="426" cy="573" r="29" fill="#ffffff"/>
+
+  <!-- right eye -->
+  <circle cx="805" cy="592" r="70" fill="url(#purpleEye)"/>
+  <ellipse cx="807" cy="603" rx="45" ry="47" fill="#000000"/>
+  <circle cx="819" cy="573" r="29" fill="#ffffff"/>
+
+  <!-- cheeks -->
+  <circle cx="368" cy="694" r="37" fill="#f7f7f7" fill-opacity="0.92"/>
+  <circle cx="879" cy="694" r="37" fill="#f7f7f7" fill-opacity="0.92"/>
+
+  <!-- whiskers: left -->
+  <path d="M 505 727 Q 444 739 387 772"
+        fill="none" stroke="#666666" stroke-width="18" stroke-linecap="round"/>
+  <path d="M 510 752 Q 452 774 411 815"
+        fill="none" stroke="#666666" stroke-width="18" stroke-linecap="round"/>
+  <path d="M 519 775 Q 479 807 451 854"
+        fill="none" stroke="#666666" stroke-width="18" stroke-linecap="round"/>
+
+  <!-- whiskers: right -->
+  <path d="M 742 727 Q 803 739 860 772"
+        fill="none" stroke="#666666" stroke-width="18" stroke-linecap="round"/>
+  <path d="M 737 752 Q 795 774 836 815"
+        fill="none" stroke="#666666" stroke-width="18" stroke-linecap="round"/>
+  <path d="M 728 775 Q 768 807 796 854"
+        fill="none" stroke="#666666" stroke-width="18" stroke-linecap="round"/>
+
+  <!-- muzzle -->
+  <circle cx="624" cy="691" r="108" fill="url(#muzzleRing)"/>
+  <circle cx="624" cy="691" r="87" fill="#ffffff"/>
+
+  <!-- nose -->
+  <path d="
+    M 578 653
+    C 586 629, 610 622, 624 622
+    C 638 622, 662 629, 670 653
+    C 668 670, 650 684, 624 702
+    C 598 684, 580 670, 578 653
+    Z"
+    fill="#030303"/>
+  <path d="
+    M 600 646
+    C 611 638, 637 638, 649 646
+    C 645 659, 635 667, 624 673
+    C 613 667, 603 659, 600 646
+    Z"
+    fill="#5e5e5e"/>
+
+  <!-- mouth center -->
+  <path d="M 624 695 L 624 720"
+        fill="none" stroke="#050505" stroke-width="13" stroke-linecap="round"/>
+
+  <!-- smile -->
+  <path d="M 624 720
+           C 620 750, 589 758, 572 735
+           C 565 725, 564 715, 566 706"
+        fill="none" stroke="#050505" stroke-width="18"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 624 720
+           C 628 750, 659 758, 676 735
+           C 683 725, 684 715, 682 706"
+        fill="none" stroke="#050505" stroke-width="18"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

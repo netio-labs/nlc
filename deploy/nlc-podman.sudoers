@@ -1,0 +1,15 @@
+# NLC: allow the backend user to run podman as root without a password.
+# Container nodes run rootful (like containerlab / EVE-NG): images such as cEOS need
+# real root (debugfs mounts, device access) that a rootless user namespace cannot give.
+#
+# This is root-equivalent for the backend user (podman run --privileged -v /:/host ...),
+# so run NLC on a dedicated host.
+#
+# Install with:
+#   sudo install -m 0440 deploy/nlc-podman.sudoers /etc/sudoers.d/nlc-podman
+#   sudo visudo -c
+#
+# Adjust the user names to match the account running the backend
+# (systemd unit uses "nlc"; local development typically uses your own login).
+Cmnd_Alias NLC_PODMAN = /usr/bin/podman
+nlc  ALL=(root) NOPASSWD: NLC_PODMAN

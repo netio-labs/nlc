@@ -1,0 +1,27 @@
+{
+  "missingParams": "Missing labId or captureId",
+  "title": "Capture #{id}",
+  "state": {
+    "connecting": "connecting",
+    "connected": "connected",
+    "disconnected": "disconnected"
+  },
+  "packets": "{count} packets",
+  "filterPlaceholder": "Display filter (e.g. tcp, ip.addr==1.2.3.4)",
+  "apply": "Apply",
+  "clear": "Clear",
+  "autoScroll": "Auto-scroll",
+  "cols": {
+    "no": "No.",
+    "time": "Time",
+    "source": "Source",
+    "destination": "Destination",
+    "protocol": "Protocol",
+    "length": "Length",
+    "info": "Info"
+  },
+  "waiting": "Waiting for packets…",
+  "connecting": "Connecting…",
+  "disconnected": "Disconnected",
+  "loading": "Loading…"
+}

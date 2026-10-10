@@ -1,0 +1,7 @@
+{
+  "title": "Docs",
+  "dirs": {
+    "guide": "guide",
+    "api": "api"
+  }
+}

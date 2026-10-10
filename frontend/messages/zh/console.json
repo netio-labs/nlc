@@ -1,0 +1,21 @@
+{
+  "page": {
+    "noLab": "未指定 Lab。请从拓扑查看器打开控制台。",
+    "notFound": "未找到该 Lab。"
+  },
+  "resetReconnect": "重置并重新连接",
+  "clickTab": "点击标签页打开控制台。",
+  "terminal": {
+    "resetting": "正在重置控制台…",
+    "connected": "已连接。",
+    "disconnected": "已断开{reason}。",
+    "wsError": "WebSocket 错误。",
+    "copyFailed": "复制失败。",
+    "pasteFailed": "粘贴失败。请授予剪贴板权限后重试。",
+    "copy": "复制",
+    "paste": "粘贴",
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "resetFontSize": "重置字号"
+  }
+}

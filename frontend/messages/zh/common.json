@@ -1,0 +1,16 @@
+{
+  "cancel": "取消",
+  "updated": {
+    "unavailable": "更新时间未知",
+    "justNow": "刚刚更新",
+    "relative": "{time}更新"
+  },
+  "pagination": {
+    "label": "分页",
+    "previous": "上一页",
+    "next": "下一页",
+    "goToPrevious": "转到上一页",
+    "goToNext": "转到下一页",
+    "morePages": "更多页"
+  }
+}

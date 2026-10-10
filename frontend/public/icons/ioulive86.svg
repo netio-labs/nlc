@@ -1,0 +1,13 @@
+<svg width="440" height="440" viewBox="0 0 440 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Square rotated 45° so its four corners land on the node's Top/Left/Right/Bottom
+       handles; this also shrinks its footprint to about half the axis-aligned square.
+       Rounded corners (rx 48) sit 0.414*rx inside the sharp tips, so the square is sized
+       to keep the outer edge of each rounded tip (stroke included) on the viewBox edge. -->
+  <rect x="58" y="58" width="324" height="324" rx="48" transform="rotate(45 220 220)"
+        fill="#3871AA" stroke="#C2C0C0" stroke-width="20"/>
+  <!-- Link glyph (drawn diagonally) turned 45° to lie horizontal, centered, sized to fit inside the diamond. -->
+  <g transform="rotate(45 220 220) translate(124 124) scale(8)" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+# NLC: allow the backend user to start ioulive86 (needs CAP_NET_RAW) without a password.
+# ioulive86 drops back to the invoking user right after opening the raw socket.
+#
+# Install with:
+#   sudo install -m 0440 deploy/nlc-ioulive86.sudoers /etc/sudoers.d/nlc-ioulive86
+#   sudo visudo -c
+#
+# Adjust the user names to match the account running the backend
+# (systemd unit uses "nlc"; local development typically uses your own login).
+Cmnd_Alias NLC_IOULIVE86 = /opt/nlc/backend/addons/iou/ioulive86
+nlc  ALL=(root) NOPASSWD: NLC_IOULIVE86

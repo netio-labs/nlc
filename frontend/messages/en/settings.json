@@ -1,0 +1,65 @@
+{
+  "heading": "Settings",
+  "sections": {
+    "images": "Images",
+    "runtime": "Runtime",
+    "backend": "Backend",
+    "shell": "Shell"
+  },
+  "loading": "Loading…",
+  "save": "Save",
+  "saving": "Saving…",
+  "images": {
+    "title": "Images",
+    "upload": "Upload Image",
+    "uploading": "Uploading…",
+    "intro": "Manage IOU/IOL images. Uploaded filenames must follow the naming rules:",
+    "routers": "— routers",
+    "switches": "— switches",
+    "rejected": "Files that don't match are rejected. See the <link>Getting Started guide</link>.",
+    "count": "{count} images",
+    "empty": "No images found. Upload an image to get started.",
+    "router": "Router",
+    "switch": "Switch",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "deleted": "Deleted {name}.",
+    "uploaded": "Uploaded {name}."
+  },
+  "runtime": {
+    "title": "Runtime",
+    "hostname": "Hostname",
+    "hostnameHint": "Detected automatically from the backend host.",
+    "currentKey": "Current IOU/IOL key",
+    "notSet": "Not set",
+    "updateKey": "Update IOU/IOL key",
+    "keyPlaceholder": "Enter IOU/IOL key",
+    "keySaved": "IOU/IOL key saved."
+  },
+  "backend": {
+    "title": "Backend",
+    "intro": "Configure how the frontend reaches the backend.",
+    "urls": "Backend URLs",
+    "internalUrl": "Internal URL",
+    "internalUrlHint": "— used by the Next.js server to reach the backend directly",
+    "internalUrlHelp": "Typically <mono>http://localhost:8080</mono> when frontend and backend run on the same machine.",
+    "publicUrl": "Public URL",
+    "publicUrlHint": "— used by the browser to reach the backend (console, capture, shell)",
+    "publicUrlPlaceholder": "Leave empty to derive automatically",
+    "publicUrlHelp": "Usually left empty: the browser derives the backend address from the page address. Set it only when the backend is behind NAT and its address cannot be derived, e.g. http://203.0.113.10:4000.",
+    "saved": "Backend settings saved.",
+    "saveFailed": "Failed to save."
+  },
+  "shell": {
+    "title": "Shell",
+    "intro": "SSH into the backend host from the browser. ",
+    "username": "Username",
+    "usernamePlaceholder": "e.g. nlc",
+    "usernameRequired": "Username is required.",
+    "connect": "Connect",
+    "newSession": "New session",
+    "close": "Close",
+    "copyFailed": "Copy failed.",
+    "pasteFailed": "Paste failed."
+  }
+}

@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+"""
+NLC Virtual PC image. The implementation lives in netio_sim/ (see netio_sim/__init__.py).
+
+Single Ethernet interface: eth0 (slot 0, port 0 in NETMAP).
+Any other interfaces in the NETMAP are silently ignored.
+
+Pure-Python userspace network stack over NETIO Unix-dgram sockets.
+No root required, no system network interfaces created.
+
+Commands:
+  ip address <A.B.C.D>/<nn>     set IP (e.g. ip address 192.168.1.10/24)
+  ip address <A.B.C.D> <mask>   set IP (e.g. ip address 192.168.1.10 255.255.255.0)
+  ip address dhcp               get IP/mask/gateway from a DHCP server
+  ip gateway <A.B.C.D>          set default gateway
+  renew dhcp                    renew the DHCP lease
+  release dhcp                  release the DHCP lease
+  hostname <name>              set hostname
+  show                         show current status
+  show config                  show running vs saved configuration
+  ping <host> [<count>]        send ICMP echo (default 5)
+  telnet <host> [<port>]       interactive telnet session (Ctrl-] to quit)
+  ssh <host> [<port>]          show SSH server version and algorithms
+  get http://<host>[:<port>]   HTTP GET
+  web start [<port>]           start HTTP server (default 80)
+  web stop                     stop HTTP server
+  save | write                 save configuration to ./startup.cfg
+  debug dhcp | no debug dhcp   print DHCP messages as they are sent/received
+  help | ?                     show this help
+
+Configuration is saved as plain command lines in startup.cfg inside the node
+runtime directory and replayed automatically at start-up.
+"""
+
+import os
+import sys
+
+# Nodes run a symlink to this file from their runtime directory: resolve it to find the package.
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+
+from netio_sim.vpc_cli import main  # noqa: E402
+
+main()

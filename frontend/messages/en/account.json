@@ -1,0 +1,11 @@
+{
+  "title": "Change Password",
+  "currentPassword": "Current password",
+  "newPassword": "New password",
+  "confirmPassword": "Confirm new password",
+  "tooShort": "New password must be at least 4 characters.",
+  "mismatch": "New passwords do not match.",
+  "changed": "Password changed.",
+  "save": "Save",
+  "saving": "Saving…"
+}

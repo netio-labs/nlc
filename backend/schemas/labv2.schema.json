@@ -1,0 +1,388 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LabSpecV2",
+  "description": "Network lab specification v2 with generic node/link models.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "lab",
+    "nodes"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional JSON Schema reference for editors and validators."
+    },
+    "lab": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      }
+    },
+    "ui": {
+      "type": "object",
+      "description": "Optional UI layout metadata (viewport, node positions, edge handles, canvas annotations). Transparent to backend topology operations.",
+      "additionalProperties": false,
+      "properties": {
+        "viewport": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "zoom": {
+              "type": "number"
+            }
+          }
+        },
+        "nodes": {
+          "type": "object",
+          "description": "Map of node UUID to canvas position.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "edges": {
+          "type": "object",
+          "description": "Map of edge UUID to handle configuration.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "sourceHandle": {
+                "type": "string"
+              },
+              "targetHandle": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "annotations": {
+          "type": "array",
+          "description": "Free-form canvas annotations (boxes, ellipses, text, lines, arrows). Display only.",
+          "items": {
+            "$ref": "#/$defs/annotation"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+      "description": "UUID string."
+    },
+    "interfaceFamily": {
+      "type": "string",
+      "enum": [
+        "ethernet",
+        "serial"
+      ],
+      "description": "Interface family type."
+    },
+    "interfaceLayout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "uiPrefix",
+        "slotCount",
+        "portsPerSlot"
+      ],
+      "properties": {
+        "family": {
+          "$ref": "#/$defs/interfaceFamily"
+        },
+        "uiPrefix": {
+          "type": "string",
+          "description": "Display prefix for interface labels, e.g. 'e', 's'."
+        },
+        "slotCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16,
+          "description": "Number of slots in this family."
+        },
+        "portsPerSlot": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of ports per slot."
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "description": "Runtime-specific extension object (record<string, unknown>).",
+      "additionalProperties": true
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id",
+        "name",
+        "vendor",
+        "profile",
+        "image",
+        "runtime",
+        "interfaces"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Simulator type, e.g. iou, ioulive86, container, qemu."
+        },
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-friendly node name."
+        },
+        "vendor": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Vendor identifier, e.g. cisco."
+        },
+        "profile": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Device profile name, e.g. iouSwitch."
+        },
+        "image": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Image filename or runtime image reference."
+        },
+        "runtime": {
+          "$ref": "#/$defs/runtime"
+        },
+        "interfaces": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/interfaceLayout"
+          },
+          "description": "Interface family definitions and slot/port layout."
+        }
+      }
+    },
+    "linkEndpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "slot",
+        "port"
+      ],
+      "properties": {
+        "family": {
+          "$ref": "#/$defs/interfaceFamily"
+        },
+        "slot": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source",
+        "target",
+        "endpoints"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "kind": {
+          "enum": [
+            "netio",
+            "veth"
+          ],
+          "default": "netio",
+          "description": "Link realization: 'netio' (IOU bus, default when omitted) or 'veth' (direct kernel veth pair for container links; no netio/NETMAP). The endpoint shape is the same for both; a veth link uses family 'ethernet' and slot 0. Which links must be veth (those touching a container) is enforced in code, not the schema."
+        },
+        "source": {
+          "$ref": "#/$defs/uuid",
+          "description": "Source node id."
+        },
+        "target": {
+          "$ref": "#/$defs/uuid",
+          "description": "Target node id."
+        },
+        "endpoints": {
+          "type": "array",
+          "description": "Endpoint[0] is source interface; endpoint[1] is target interface.",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/linkEndpoint"
+          }
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "rect",
+            "ellipse",
+            "text",
+            "line",
+            "arrow"
+          ]
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number",
+          "minimum": 0,
+          "description": "rect/ellipse only; text sizes to its content, lines derive it from points."
+        },
+        "height": {
+          "type": "number",
+          "minimum": 0,
+          "description": "rect/ellipse only; text sizes to its content, lines derive it from points."
+        },
+        "rotation": {
+          "type": "number",
+          "description": "rect/ellipse only: clockwise degrees about the shape's centre."
+        },
+        "points": {
+          "type": "array",
+          "minItems": 2,
+          "description": "line/arrow only: [start, end] relative to (x, y).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "x",
+              "y"
+            ],
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            }
+          },
+          "maxItems": 2
+        },
+        "text": {
+          "type": "string",
+          "description": "Text content, or the label of a rect/ellipse."
+        },
+        "labelPosition": {
+          "type": "string",
+          "enum": [
+            "top-left",
+            "top",
+            "top-right",
+            "left",
+            "center",
+            "right",
+            "bottom-left",
+            "bottom",
+            "bottom-right"
+          ],
+          "description": "rect/ellipse only: where the label sits inside the shape."
+        },
+        "color": {
+          "type": "string",
+          "enum": [
+            "gray",
+            "blue",
+            "green",
+            "amber",
+            "red"
+          ],
+          "description": "Preset name; resolved per theme by the frontend."
+        },
+        "strokeWidth": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 20,
+          "description": "Outline/line width; not used by text."
+        },
+        "fontSize": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 72
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "multilink": "multilink",
+  "topBar": {
+    "labName": "Lab name",
+    "description": "Description (optional)",
+    "view": "View",
+    "saving": "Saving…",
+    "save": "Save Lab"
+  },
+  "sidebar": {
+    "build": "Build",
+    "labSettings": "Lab Settings",
+    "emptySelection": "Select a node or edge to edit.",
+    "showInterfaceLabels": "Show interface labels",
+    "on": "On",
+    "off": "Off",
+    "labId": "Lab ID"
+  },
+  "toast": {
+    "vethPeer": "Connect a container to an IOULive86 bridge or another container.",
+    "noCommonFamily": "No common interface family between these nodes.",
+    "bridgeTaken": "This IOULive86 bridge already connects to a container.",
+    "noLinkInterfaces": "No available interfaces for this link.",
+    "noFamilyInterfaces": "No available interfaces for this family.",
+    "interfaceUnavailable": "Interface not available.",
+    "saved": "Lab saved successfully.",
+    "saveFailed": "Save failed."
+  },
+  "profiles": {
+    "iouRouter": "IOU Router",
+    "iouSwitch": "IOU Switch",
+    "vpc": "Virtual PC",
+    "container": "Container",
+    "ioulive86": "IOULive Bridge"
+  },
+  "tools": {
+    "rect": "Box",
+    "ellipse": "Ellipse",
+    "text": "Text",
+    "line": "Line (drag to draw, Shift snaps 45°)",
+    "arrow": "Arrow (drag to draw, Shift snaps 45°)"
+  },
+  "nodePanel": {
+    "name": "Name",
+    "containerImage": "Container image",
+    "profileImage": "{profile} image",
+    "image": "Image",
+    "fixed": "{value} (fixed)",
+    "selectImage": "Select image…",
+    "containerImagePlaceholder": "e.g. alpine:latest",
+    "imageFilename": "Image filename",
+    "interfaces": "Interfaces",
+    "noInterfaces": "No interfaces.",
+    "runtime": "Runtime",
+    "selectInterface": "Select interface…",
+    "autoBridge": "auto (bridge a container)",
+    "notFound": "not found",
+    "variantNeeds": "{variant} need {key} ≥ {min}.",
+    "variants": {
+      "iol": "IOL images"
+    },
+    "runtimeFields": {
+      "interface": "Bind interface"
+    },
+    "imageNotLocal": "Image not found locally · default parameters",
+    "notInCatalog": "Not in catalog · default parameters",
+    "supported": "{label} · supported",
+    "catalogDrift": "Parameters differ from the catalog ({label}).",
+    "reapply": "Reapply",
+    "runParameters": "Run parameters",
+    "command": "Command",
+    "runOptions": "Run options",
+    "consoleShell": "Console shell",
+    "imageEntrypoint": "image entrypoint",
+    "ethernetPorts": "Ethernet ports",
+    "interfaceAddressing": "Interface addressing",
+    "address": "address",
+    "prefix": "prefix",
+    "gatewayOptional": "gateway (optional)"
+  },
+  "edgePanel": {
+    "multipleLinks": "Multiple Links",
+    "link": "link {n}",
+    "family": "Family",
+    "unknown": "unknown",
+    "handle": "Handle",
+    "interface": "Interface",
+    "description": "Description",
+    "sides": {
+      "top": "top",
+      "right": "right",
+      "bottom": "bottom",
+      "left": "left"
+    }
+  },
+  "annotationPanel": {
+    "kinds": {
+      "rect": "Box",
+      "ellipse": "Ellipse",
+      "text": "Text",
+      "line": "Line",
+      "arrow": "Arrow"
+    },
+    "text": "Text",
+    "label": "Label",
+    "optional": "Optional",
+    "labelPosition": "Label position",
+    "labelAt": "Label {position}",
+    "positions": {
+      "top-left": "top-left",
+      "top": "top",
+      "top-right": "top-right",
+      "left": "left",
+      "center": "center",
+      "right": "right",
+      "bottom-left": "bottom-left",
+      "bottom": "bottom",
+      "bottom-right": "bottom-right"
+    },
+    "rotation": "Rotation",
+    "color": "Color",
+    "colors": {
+      "gray": "gray",
+      "blue": "blue",
+      "green": "green",
+      "amber": "amber",
+      "red": "red"
+    },
+    "lineWidth": "Line width",
+    "lineWidthN": "Line width {width}",
+    "fontSize": "Font size",
+    "delete": "Delete"
+  }
+}

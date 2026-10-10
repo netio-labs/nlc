@@ -1,0 +1,65 @@
+{
+  "heading": "设置",
+  "sections": {
+    "images": "镜像",
+    "runtime": "运行时",
+    "backend": "后端",
+    "shell": "Shell"
+  },
+  "loading": "加载中…",
+  "save": "保存",
+  "saving": "保存中…",
+  "images": {
+    "title": "镜像",
+    "upload": "上传镜像",
+    "uploading": "上传中…",
+    "intro": "管理 IOU/IOL 镜像。上传的文件名必须符合以下命名规则：",
+    "routers": "— 路由器",
+    "switches": "— 交换机",
+    "rejected": "不符合规则的文件将被拒绝。详见<link>入门指南</link>。",
+    "count": "{count} 个镜像",
+    "empty": "未找到镜像。上传一个镜像以开始使用。",
+    "router": "路由器",
+    "switch": "交换机",
+    "delete": "删除",
+    "deleting": "删除中…",
+    "deleted": "已删除 {name}。",
+    "uploaded": "已上传 {name}。"
+  },
+  "runtime": {
+    "title": "运行时",
+    "hostname": "主机名",
+    "hostnameHint": "从后端主机自动检测。",
+    "currentKey": "当前 IOU/IOL 密钥",
+    "notSet": "未设置",
+    "updateKey": "更新 IOU/IOL 密钥",
+    "keyPlaceholder": "输入 IOU/IOL 密钥",
+    "keySaved": "IOU/IOL 密钥已保存。"
+  },
+  "backend": {
+    "title": "后端",
+    "intro": "配置前端如何访问后端。",
+    "urls": "后端 URL",
+    "internalUrl": "Internal URL",
+    "internalUrlHint": "— Next.js 服务端直接访问后端时使用",
+    "internalUrlHelp": "前端与后端运行在同一台机器上时，通常为 <mono>http://localhost:8080</mono>。",
+    "publicUrl": "Public URL",
+    "publicUrlHint": "— 浏览器连接后端时使用（控制台、抓包、Shell）",
+    "publicUrlPlaceholder": "留空则自动推算",
+    "publicUrlHelp": "通常留空，浏览器会根据页面地址自动连接后端。仅当后端经 NAT 映射、地址无法推算时填写，如 http://203.0.113.10:4000。",
+    "saved": "后端设置已保存。",
+    "saveFailed": "保存失败。"
+  },
+  "shell": {
+    "title": "Shell",
+    "intro": "在浏览器中通过 SSH 登录后端主机。",
+    "username": "用户名",
+    "usernamePlaceholder": "例如 nlc",
+    "usernameRequired": "请输入用户名。",
+    "connect": "连接",
+    "newSession": "新会话",
+    "close": "关闭",
+    "copyFailed": "复制失败。",
+    "pasteFailed": "粘贴失败。"
+  }
+}

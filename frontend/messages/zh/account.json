@@ -1,0 +1,11 @@
+{
+  "title": "修改密码",
+  "currentPassword": "当前密码",
+  "newPassword": "新密码",
+  "confirmPassword": "确认新密码",
+  "tooShort": "新密码至少需要 4 个字符。",
+  "mismatch": "两次输入的新密码不一致。",
+  "changed": "密码已修改。",
+  "save": "保存",
+  "saving": "保存中…"
+}

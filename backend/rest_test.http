@@ -1,0 +1,406 @@
+@base = http://127.0.0.1:8080
+@labId = 0aab910b-991a-434c-89fc-2c866facdd4f
+@nodeR1 = 22222222-2222-4222-8222-222222222226
+@nodeR2 = 33333333-3333-4333-8333-333333333336
+@linkId = aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa4
+@captureId = 1
+
+# ─────────────────────────────────────────────
+# Auth
+#
+# All routes below (except /v1/auth/*) require a token,
+# either as `Authorization: Bearer <token>` or an `nlc-token`
+# cookie. Run the "login" request first (Send Request on it) —
+# the REST Client extension captures its response into {{token}}
+# via `@token = {{login.response.body.$.data.token}}`, but that
+# value is only interpolated into requests that explicitly
+# include `Authorization: Bearer {{token}}` as a header — it is
+# NOT attached automatically to other requests in this file.
+# ─────────────────────────────────────────────
+
+# @name login
+POST {{base}}/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "changeme"
+}
+
+###
+
+@token = {{login.response.body.$.data.token}}
+
+# ─────────────────────────────────────────────
+# User
+# ─────────────────────────────────────────────
+
+### Change password (single-user system, no username in body)
+POST {{base}}/v1/user/change-password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "currentPassword": "changeme",
+  "newPassword": "changeme"
+}
+
+# ─────────────────────────────────────────────
+# Images
+# ─────────────────────────────────────────────
+
+### List all images
+GET {{base}}/v1/image/iou
+Authorization: Bearer {{token}}
+
+### List switch images (I86BI_LINUX_L2*)
+GET {{base}}/v1/image/iou?profile=iouSwitch
+Authorization: Bearer {{token}}
+
+### List router images (I86BI_LINUX* without L2)
+GET {{base}}/v1/image/iou?profile=iouRouter
+Authorization: Bearer {{token}}
+
+### Upload image (multipart/form-data)
+POST {{base}}/v1/image/iou
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----NLCBoundary
+
+------NLCBoundary
+Content-Disposition: form-data; name="file"; filename="I86BI_LINUX-NEW-IMAGE.bin"
+Content-Type: application/octet-stream
+
+< ./addons/iou/I86BI_LINUX-ADVENTERPRISE-M-15.1
+------NLCBoundary--
+
+### Delete image by name
+DELETE {{base}}/v1/image/iou/I86BI_LINUX-NEW-IMAGE.bin
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────
+# IOU/IOL key
+# ─────────────────────────────────────────────
+
+### Get current IOU/IOL key (returns hostname + key)
+GET {{base}}/v1/image/iou/key
+Authorization: Bearer {{token}}
+
+### Set IOU/IOL key
+PUT {{base}}/v1/image/iou/key
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "key": "5d06f1b20df226e7"
+}
+
+# ─────────────────────────────────────────────
+# Labs
+# ─────────────────────────────────────────────
+
+### List labs (default: limit=10, offset=0, view=update)
+GET {{base}}/v1/labs
+Authorization: Bearer {{token}}
+
+### List labs with pagination and view filter
+GET {{base}}/v1/labs?limit=5&offset=0&view=create
+Authorization: Bearer {{token}}
+
+### Create lab
+POST {{base}}/v1/labs
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "$schema": "../schemas/labv2.schema.json",
+  "lab": {
+    "id": "aaaaaaaa-1111-4111-8111-aaaaaaaaaaa6",
+    "name": "New Lab",
+    "description": "created from rest_test"
+  },
+  "nodes": [
+    {
+      "type": "iou",
+      "id": "aaaaaaaa-2222-4222-8222-aaaaaaaaaaaa",
+      "name": "r1",
+      "vendor": "cisco",
+      "profile": "iouSwitch",
+      "image": "I86BI_LINUX_L2-UPK9-M-15.0",
+      "runtime": { "ram": 128, "nvram": 64 },
+      "interfaces": [
+        { "family": "ethernet", "slotCount": 2, "portsPerSlot": 4 }
+      ]
+    }
+  ],
+  "links": []
+}
+
+### Import lab (all ids regenerated; name/description kept as-is)
+POST {{base}}/v1/labs/import
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "$schema": "../schemas/labv2.schema.json",
+  "lab": {
+    "id": "aaaaaaaa-1111-4111-8111-aaaaaaaaaaa7",
+    "name": "Imported Lab",
+    "description": "imported from rest_test"
+  },
+  "nodes": [
+    {
+      "type": "iou",
+      "id": "aaaaaaaa-2222-4222-8222-aaaaaaaaaaab",
+      "name": "r1",
+      "vendor": "cisco",
+      "profile": "iouSwitch",
+      "image": "I86BI_LINUX_L2-UPK9-M-15.0",
+      "runtime": { "ram": 128, "nvram": 64 },
+      "interfaces": [
+        { "family": "ethernet", "slotCount": 2, "portsPerSlot": 4 }
+      ]
+    }
+  ],
+  "links": []
+}
+
+### Get lab info (nodes with instance_id, console_port, status)
+GET {{base}}/v1/labs/{{labId}}
+Authorization: Bearer {{token}}
+
+### Get lab spec (full topology JSON)
+GET {{base}}/v1/labs/{{labId}}/spec
+Authorization: Bearer {{token}}
+
+### Update lab (body.lab.id must match path labId)
+PUT {{base}}/v1/labs/{{labId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "$schema": "../schemas/labv2.schema.json",
+  "lab": {
+    "id": "{{labId}}",
+    "name": "Example IOU Lab (updated)",
+    "description": "updated from rest_test"
+  },
+  "nodes": [
+    {
+      "type": "iou",
+      "id": "{{nodeR1}}",
+      "name": "r1",
+      "vendor": "cisco",
+      "profile": "iouSwitch",
+      "image": "I86BI_LINUX_L2-UPK9-M-15.0",
+      "runtime": { "ram": 128, "nvram": 64 },
+      "interfaces": [
+        { "family": "ethernet", "slotCount": 2, "portsPerSlot": 4 },
+        { "family": "serial", "slotCount": 1, "portsPerSlot": 4 }
+      ]
+    },
+    {
+      "type": "iou",
+      "id": "{{nodeR2}}",
+      "name": "r2",
+      "vendor": "cisco",
+      "profile": "iouSwitch",
+      "image": "I86BI_LINUX_L2-UPK9-M-15.0",
+      "runtime": { "ram": 128, "nvram": 64 },
+      "interfaces": [
+        { "family": "ethernet", "slotCount": 2, "portsPerSlot": 4 },
+        { "family": "serial", "slotCount": 2, "portsPerSlot": 4 }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa3",
+      "source": "{{nodeR1}}",
+      "target": "{{nodeR2}}",
+      "endpoints": [
+        { "family": "ethernet", "slot": 0, "port": 0 },
+        { "family": "ethernet", "slot": 0, "port": 0 }
+      ],
+      "description": "r1 e0/0 <-> r2 e0/0"
+    },
+    {
+      "id": "{{linkId}}",
+      "source": "{{nodeR1}}",
+      "target": "{{nodeR2}}",
+      "endpoints": [
+        { "family": "serial", "slot": 2, "port": 0 },
+        { "family": "serial", "slot": 2, "port": 0 }
+      ],
+      "description": "r1 s2/0 <-> r2 s2/0"
+    }
+  ]
+}
+
+### Duplicate lab (all ids regenerated; name gets " duplicated" suffix)
+POST {{base}}/v1/labs/{{labId}}/duplicate
+Authorization: Bearer {{token}}
+
+### Delete lab (must be unloaded first)
+DELETE {{base}}/v1/labs/{{labId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────
+# Lab lifecycle
+# ─────────────────────────────────────────────
+
+### Load lab (allocate instance IDs, write netmap)
+POST {{base}}/v1/labs/{{labId}}/load
+Authorization: Bearer {{token}}
+
+### Unload lab (stop all nodes, release instance IDs, delete runtime dir)
+POST {{base}}/v1/labs/{{labId}}/unload
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────
+# Nodes — bulk
+# ─────────────────────────────────────────────
+
+### Start all nodes
+POST {{base}}/v1/labs/{{labId}}/nodes/start
+Authorization: Bearer {{token}}
+
+### Stop all nodes
+POST {{base}}/v1/labs/{{labId}}/nodes/stop
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────
+# Nodes — single
+# ─────────────────────────────────────────────
+
+### Get node status (instance_id, console_port, running/stopped)
+GET {{base}}/v1/labs/{{labId}}/nodes/{{nodeR1}}
+Authorization: Bearer {{token}}
+
+### Get node status
+GET {{base}}/v1/labs/{{labId}}/nodes/{{nodeR2}}
+Authorization: Bearer {{token}}
+
+### Start node R1
+POST {{base}}/v1/labs/{{labId}}/nodes/{{nodeR1}}/start
+Authorization: Bearer {{token}}
+
+### Stop node R1
+POST {{base}}/v1/labs/{{labId}}/nodes/{{nodeR1}}/stop
+Authorization: Bearer {{token}}
+
+### Reset node R1 console port
+POST {{base}}/v1/labs/{{labId}}/nodes/{{nodeR1}}/reset
+Authorization: Bearer {{token}}
+
+### Start node R2
+POST {{base}}/v1/labs/{{labId}}/nodes/{{nodeR2}}/start
+Authorization: Bearer {{token}}
+
+### Stop node R2
+POST {{base}}/v1/labs/{{labId}}/nodes/{{nodeR2}}/stop
+Authorization: Bearer {{token}}
+
+### Reset node R2 console port
+POST {{base}}/v1/labs/{{labId}}/nodes/{{nodeR2}}/reset
+Authorization: Bearer {{token}}
+
+# Console is WebSocket — use wscat or the browser console page:
+# wscat -c ws://127.0.0.1:8080/v1/labs/{{labId}}/nodes/{{nodeR1}}/console
+
+# ─────────────────────────────────────────────
+# Captures
+# ─────────────────────────────────────────────
+
+### List all captures for lab
+GET {{base}}/v1/labs/{{labId}}/captures
+Authorization: Bearer {{token}}
+
+### List captures filtered by link
+GET {{base}}/v1/labs/{{labId}}/captures?linkId={{linkId}}
+Authorization: Bearer {{token}}
+
+### Start capture on a link
+POST {{base}}/v1/labs/{{labId}}/captures
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "linkId": "{{linkId}}",
+  "encap": "ethernet"
+}
+
+### Start capture with PPP encapsulation
+POST {{base}}/v1/labs/{{labId}}/captures
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "linkId": "{{linkId}}",
+  "encap": "ppp"
+}
+
+### Get capture by ID
+GET {{base}}/v1/labs/{{labId}}/captures/{{captureId}}
+Authorization: Bearer {{token}}
+
+### Stop capture by ID
+POST {{base}}/v1/labs/{{labId}}/captures/{{captureId}}/stop
+Authorization: Bearer {{token}}
+
+### Cleanup all captures for lab
+POST {{base}}/v1/labs/{{labId}}/captures/cleanup
+Authorization: Bearer {{token}}
+
+# Capture stream is WebSocket — connect with wscat or pipe to Wireshark:
+# wsl nc 127.0.0.1 30001 | "C:\Program Files\Wireshark\Wireshark.exe" -k -i -
+# ncat -v 172.26.97.233 30001 | "C:\Program Files\Wireshark\Wireshark.exe" -k -i -
+# nc 127.0.0.1 30001 | wireshark -k -i -
+
+# ─────────────────────────────────────────────
+# Host / ioulive86
+# ─────────────────────────────────────────────
+
+### List host interfaces usable for ioulive86 bridging
+GET {{base}}/v1/host/interfaces
+Authorization: Bearer {{token}}
+
+### Create lab with one IOU router bridged to eth0 through ioulive86
+POST {{base}}/v1/labs
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "lab": { "id": "6d1e0b2a-1111-4b1b-8a1a-000000000086", "name": "ioulive86 demo" },
+  "nodes": [
+    {
+      "id": "6d1e0b2a-2222-4b1b-8a1a-000000000001",
+      "type": "iou", "name": "R1", "vendor": "cisco", "profile": "iouRouter",
+      "image": "I86BI_LINUX-AdvEnterpriseK9-M2_157.bin",
+      "runtime": { "ram": 256, "nvram": 64 },
+      "interfaces": [
+        { "family": "ethernet", "uiPrefix": "e", "slotCount": 1, "portsPerSlot": 4 },
+        { "family": "serial", "uiPrefix": "s", "slotCount": 0, "portsPerSlot": 4 }
+      ]
+    },
+    {
+      "id": "6d1e0b2a-3333-4b1b-8a1a-000000000002",
+      "type": "ioulive86", "name": "LAN1", "vendor": "nlc", "profile": "ioulive86",
+      "image": "ioulive86",
+      "runtime": { "interface": "eth0" },
+      "interfaces": [
+        { "family": "ethernet", "uiPrefix": "e", "slotCount": 1, "portsPerSlot": 1 }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "6d1e0b2a-4444-4b1b-8a1a-000000000003",
+      "source": "6d1e0b2a-2222-4b1b-8a1a-000000000001",
+      "target": "6d1e0b2a-3333-4b1b-8a1a-000000000002",
+      "endpoints": [
+        { "family": "ethernet", "slot": 0, "port": 0 },
+        { "family": "ethernet", "slot": 0, "port": 0 }
+      ]
+    }
+  ]
+}

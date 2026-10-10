@@ -1,0 +1,23 @@
+[Unit]
+Description=NLC Backend (Fastify)
+After=network.target
+
+[Service]
+Type=simple
+User=nlc
+Group=nlc
+
+WorkingDirectory=/opt/nlc/backend
+ExecStart=/usr/bin/node --enable-source-maps dist/index.js
+Restart=on-failure
+RestartSec=5
+
+Environment=NODE_ENV=production
+
+# stdout/stderr go to journald; view with: journalctl -u nlc-backend -f
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nlc-backend
+
+[Install]
+WantedBy=multi-user.target

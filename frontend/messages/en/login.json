@@ -1,0 +1,7 @@
+{
+  "username": "Username",
+  "password": "Password",
+  "submit": "Login",
+  "submitting": "Login...",
+  "failed": "Login failed. Please check your username and password."
+}

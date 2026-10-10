@@ -1,0 +1,16 @@
+# NLC: allow the backend user to run the netns helper (veth plumbing for container
+# nodes) without a password. The helper only ever creates/deletes/configures
+# interfaces named podveth<N> — it can never touch eth0 or any real NIC.
+#
+# SECURITY: the helper must be root-owned and NOT writable by the backend user,
+# otherwise passwordless sudo on it becomes a root-shell escalation. Install as root:
+#
+#   sudo chown root:root /opt/nlc/backend/addons/helper/nlc-netns-helper
+#   sudo chmod 0755     /opt/nlc/backend/addons/helper/nlc-netns-helper
+#   sudo install -m 0440 deploy/nlc-netns-helper.sudoers /etc/sudoers.d/nlc-netns-helper
+#   sudo visudo -c
+#
+# Adjust the user names to the account running the backend (systemd unit: nlc;
+# local development: your own login).
+Cmnd_Alias NLC_NETNS = /opt/nlc/backend/addons/helper/nlc-netns-helper
+nlc  ALL=(root) NOPASSWD: NLC_NETNS

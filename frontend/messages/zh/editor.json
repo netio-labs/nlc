@@ -1,0 +1,134 @@
+{
+  "multilink": "多链路",
+  "topBar": {
+    "labName": "Lab 名称",
+    "description": "描述（可选）",
+    "view": "查看",
+    "saving": "保存中…",
+    "save": "保存 Lab"
+  },
+  "sidebar": {
+    "build": "构建",
+    "labSettings": "Lab 设置",
+    "emptySelection": "选择一个节点或链路进行编辑。",
+    "showInterfaceLabels": "显示接口标签",
+    "on": "开",
+    "off": "关",
+    "labId": "Lab ID"
+  },
+  "toast": {
+    "vethPeer": "容器只能连接到 IOULive86 网桥或其他容器。",
+    "noCommonFamily": "这些节点之间没有共同的接口类型。",
+    "bridgeTaken": "该 IOULive86 网桥已连接一个容器。",
+    "noLinkInterfaces": "该链路没有可用接口。",
+    "noFamilyInterfaces": "该接口类型没有可用接口。",
+    "interfaceUnavailable": "接口不可用。",
+    "saved": "Lab 已保存。",
+    "saveFailed": "保存失败。"
+  },
+  "profiles": {
+    "iouRouter": "IOU 路由器",
+    "iouSwitch": "IOU 交换机",
+    "vpc": "虚拟 PC",
+    "container": "容器",
+    "ioulive86": "IOULive 网桥"
+  },
+  "tools": {
+    "rect": "方框",
+    "ellipse": "椭圆",
+    "text": "文本",
+    "line": "直线（拖动绘制，按住 Shift 吸附 45°）",
+    "arrow": "箭头（拖动绘制，按住 Shift 吸附 45°）"
+  },
+  "nodePanel": {
+    "name": "名称",
+    "containerImage": "容器镜像",
+    "profileImage": "{profile}镜像",
+    "image": "镜像",
+    "fixed": "{value}（固定）",
+    "selectImage": "选择镜像…",
+    "containerImagePlaceholder": "例如 alpine:latest",
+    "imageFilename": "镜像文件名",
+    "interfaces": "接口",
+    "noInterfaces": "无接口。",
+    "runtime": "运行时",
+    "selectInterface": "选择接口…",
+    "autoBridge": "auto（桥接容器）",
+    "notFound": "未找到",
+    "variantNeeds": "{variant}需要 {key} ≥ {min}。",
+    "variants": {
+      "iol": "IOL 镜像"
+    },
+    "runtimeFields": {
+      "interface": "绑定接口"
+    },
+    "imageNotLocal": "本地未找到镜像 · 默认参数",
+    "notInCatalog": "不在支持库中 · 默认参数",
+    "supported": "{label} · 已支持",
+    "catalogDrift": "参数与支持库不一致（{label}）。",
+    "reapply": "重新应用",
+    "runParameters": "运行参数",
+    "command": "命令",
+    "runOptions": "运行选项",
+    "consoleShell": "控制台 Shell",
+    "imageEntrypoint": "镜像 entrypoint",
+    "ethernetPorts": "以太网端口",
+    "interfaceAddressing": "接口地址",
+    "address": "地址",
+    "prefix": "前缀",
+    "gatewayOptional": "网关（可选）"
+  },
+  "edgePanel": {
+    "multipleLinks": "多条链路",
+    "link": "链路 {n}",
+    "family": "接口类型",
+    "unknown": "未知",
+    "handle": "连接点",
+    "interface": "接口",
+    "description": "描述",
+    "sides": {
+      "top": "上",
+      "right": "右",
+      "bottom": "下",
+      "left": "左"
+    }
+  },
+  "annotationPanel": {
+    "kinds": {
+      "rect": "方框",
+      "ellipse": "椭圆",
+      "text": "文本",
+      "line": "直线",
+      "arrow": "箭头"
+    },
+    "text": "文本",
+    "label": "标签",
+    "optional": "可选",
+    "labelPosition": "标签位置",
+    "labelAt": "标签：{position}",
+    "positions": {
+      "top-left": "左上",
+      "top": "上",
+      "top-right": "右上",
+      "left": "左",
+      "center": "居中",
+      "right": "右",
+      "bottom-left": "左下",
+      "bottom": "下",
+      "bottom-right": "右下"
+    },
+    "rotation": "旋转",
+    "color": "颜色",
+    "colors": {
+      "gray": "灰色",
+      "blue": "蓝色",
+      "green": "绿色",
+      "amber": "琥珀色",
+      "red": "红色"
+    },
+    "lineWidth": "线宽",
+    "lineWidthN": "线宽 {width}",
+    "fontSize": "字号",
+    "delete": "删除"
+  }
+}
